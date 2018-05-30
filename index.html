@@ -1,0 +1,33 @@
+<html>
+<head>
+  <link href="css/dv3-countdown.css" rel="stylesheet"/>
+</head>
+<body>
+  <div id="time"></div>
+  <br/>
+  <div id="timeReverse"></div>
+</body>
+<script src="js/jquery-1.9.1-min.js" type="text/javascript"></script>
+<script src="js/dv3-countdown.js"></script>
+<script>
+  $(document).ready(function() {
+    $("#time").countDown({
+      seconds: 1000,
+      callback: function() {alert("timeouut")},
+      progressBar: true, //default false 
+    });
+    $("#timeReverse").countDown({
+      seconds: 1000,
+      callback: function() {alert("timeouut")},
+      progressBar: true, //default false 
+      progressReverse: true, //default false
+    });
+    // $("#time").countDown(4000, function() {
+    //   alert('timeout')
+    // });
+    // $("#time").countDown(new Date("May 25 2018 20:25:01"), function() {
+    //   alert("timeout");
+    // });
+  })
+</script>
+</html>
