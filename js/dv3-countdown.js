@@ -9,6 +9,10 @@
       displayHours: true
     };
 
+    const secInDays = 86400,
+    secInHours = 3600,
+    secInMins = 60;
+
     var startTime = Date.now(),
         nextTime = null,
         cWidth,
@@ -20,6 +24,7 @@
         hours,
         minutes,
         seconds,
+        displayDays,
         method,
         j,
         num,  
@@ -60,17 +65,29 @@
     }
 
     plugin.init = function() {
+      diffSec = options.seconds - (( $.now() - startTime) / 1000 | 0);
+    
+      if(!options.displayDays && diffSec >= secInDays) {
+        days = parseInt(diffSec / secInDays);
+        displayDays = days.toString().length;
+      }
+
+      if(options.displayDays === 0 || options.displayDays) {
+        displayDays = options.displayDays;
+      }
+
       plugin.addClass('ctd-container');
       cWidth = plugin.width();
       var html = '';
       if(options.progressBar) {
-        //bisa fromleft to right, vice versa, or reverse
         subSec = cWidth / options.seconds;
+        // progress reverse means start from full bar to empty bar
         var pWidth = options.progressReverse ? cWidth : 0;
         html += '<div class="ctd-progress-wrapper"><div class="ctd-progress-bar" style="width:' + pWidth + 'px;"></div></div>';
       }
-      html += '<div class="ctd ctd-days">00</div>' +
-              '<span class="ctd">:</span>' +
+
+      dayHtml = displayDays ? '<div class="ctd ctd-days">00</div>' : '';
+      html += dayHtml +
               '<div class="ctd ctd-hours">00</div>' +
               '<span class="ctd">:</span>' +
               '<div class="ctd ctd-minutes">00</div>' +
@@ -83,27 +100,30 @@
       diffSec = options.seconds - (( $.now() - startTime) / 1000 | 0);
       var progressBarWidth = plugin.find(".ctd-progress-bar").width();
       timeRemaining = diffSec;
-      
-      days = parseInt(timeRemaining / 86400);
-      timeRemaining = (timeRemaining % 86400);
 
-      hours = parseInt(timeRemaining / 3600);
-      timeRemaining = (timeRemaining % 3600);
+      if(displayDays) {
+        days = parseInt(timeRemaining / secInDays);
+        timeRemaining = (timeRemaining % secInDays);
+        days = ("000" + days).slice(-(displayDays));
+        plugin.find(".ctd-days").html(days);
+      }
+        
+      hours = parseInt(timeRemaining / secInHours);
+      timeRemaining = (timeRemaining % secInHours);
+      hours = hours < 10 ? "0" + hours : hours;
+      plugin.find(".ctd-hours").html(hours);
       
-      minutes = parseInt(timeRemaining / 60);
-      timeRemaining = (timeRemaining % 60);
+      minutes = parseInt(timeRemaining / secInMins);
+      timeRemaining = (timeRemaining % secInMins);
       
       seconds = parseInt(timeRemaining);
-
-      days = days < 10 ? "0" + days : days;
-      hours = hours < 10 ? "0" + hours : hours;
+         
       minutes = minutes < 10 ? "0" + minutes : minutes;
       seconds = seconds < 10 ? "0" + seconds : seconds;
 
-      plugin.find(".ctd-days").html(days);
-      plugin.find(".ctd-hours").html(hours);
       plugin.find(".ctd-minutes").html(minutes);
       plugin.find(".ctd-seconds").html(seconds);
+
       if(options.progressReverse) {
         plugin.find(".ctd-progress-bar").animate({'width': cWidth - ((options.seconds - diffSec) * subSec) +'px'}, 800, 'linear');
       }

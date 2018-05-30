@@ -11,16 +11,17 @@
 <script src="js/dv3-countdown.js"></script>
 <script>
   $(document).ready(function() {
-    $("#time").countDown({
-      seconds: 1000,
-      callback: function() {alert("timeouut")},
-      progressBar: true, //default false 
-    });
+    // $("#time").countDown({
+    //   seconds: 1000,
+    //   callback: function() {alert("timeouut")},
+    //   progressBar: true, //default false 
+    // });
     $("#timeReverse").countDown({
-      seconds: 1000,
+      seconds: 100,
       callback: function() {alert("timeouut")},
       progressBar: true, //default false 
-      progressReverse: true, //default false
+      progressReverse: true, //default false,
+      // displayDays: 2 //default auto
     });
     // $("#time").countDown(4000, function() {
     //   alert('timeout')
